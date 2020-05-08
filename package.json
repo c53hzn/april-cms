@@ -1,0 +1,27 @@
+{
+  "name": "april-cms",
+  "version": "1.0.0",
+  "description": "A flat-file and also API-based CMS(content management system).",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [
+    "CMS","flat-file","API-based","content management system"
+  ],
+  "homepage": "https://github.com/c53hzn/april-cms",
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/c53hzn/april-cms.git"
+  },
+  "author": "c53hzn",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1",
+    "front-matter": "^3.0.2",
+    "highlight.js": "^9.15.6",
+    "markdown-it": "^8.4.2",
+    "markdown-it-toc": "^1.1.0",
+    "open": "^7.0.3"
+  }
+}

@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="apple-mobile-web-app-title" content="CodePen">
+<link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico" />
+<link rel="stylesheet" href="css/github-markdown.min.css">
+<link rel="stylesheet" href="css/hljs.dark.min.css">
+<title>Markdown editor for API</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+html, body {
+	margin: 0px;
+}
+body {
+	min-width: 768px;
+}
+nav {
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	margin: 0px;
+	padding: 10px;
+	width: 20%;
+	height: calc(100vh);
+	overflow: auto;
+	box-sizing: border-box;
+}
+.placeholder-20 {
+	width: 20%;
+	float: left;
+}
+main {
+	margin: 0px;
+	width: 80%;
+	background: #ff9a9a;
+	overflow: hidden;
+}
+#post-attr {
+	padding: 0px 20px;
+}
+#work-area {
+	margin: 0px auto;
+	display: flex;
+	justify-content: center;
+}
+#editor, #preview {
+	padding: 14px;
+	width: 50%;
+	height: calc(100vh - 208px);
+	word-wrap: break-word;
+	word-break: break-all;
+}
+#editor {
+	color: white;
+	background: black;
+	resize: none;
+	border: none;
+}
+#preview{
+	background: white;
+	overflow-y: auto;
+}
+#config {
+	margin: 0px;
+	width: auto;
+	padding: 4px 20px;
+	background: #ff9a9a;
+}
+</style>
+</head>
+<body translate="no">
+<nav>
+	<h1>List of posts</h1>
+	<input type="button" value="Update List" id="update_list">
+	<input type="button" value="Load Sample Data" id="load_sample">
+	<div id="list_of_posts"></div>
+</nav>
+<div class="placeholder-20">&nbsp;</div>
+<main>
+	<div id="post-attr">
+		<p>
+			<input id="clear_editor" type="button" value="Clear Editor"/>&nbsp;
+			<span>slug</span>
+			<input id="slug" type="text">
+			<span>layout</span>
+			<input id="layout" type="text" style="width: 40px;" disabled value="post">
+			<span>comments</span>
+			<input id="comments" type="text" style="width: 30px;" disabled value="true">
+			<span>title</span>
+			<input id="title" type="text">
+			<span>tags(split with ",")</span>
+			<input id="tags" type="text">
+			<br>
+			<span>description</span><br>
+			<textarea id="desc" style="width: 100%;"></textarea>
+			<br>
+			<span>related_blog(split with ",")</span><br>
+			<input id="related_blog" style="width: 100%;" type="text">
+		</p>
+	</div>
+	<div id="work-area">
+		<textarea id="editor" spellcheck="true"></textarea>
+		<div id="preview" class="markdown-body "></div>
+	</div>
+	<div id="config">
+		<input type="button" value="Save post" id="save" title="If slug is new, will create new post, if slug is used, then update this post">&nbsp;
+		<input type="button" value="Delete post" id="delete">
+	</div>
+</main>
+<script src='js/jquery.min.js'></script>
+<script src='js/markdown-it.min.js'></script>
+<script src='js/markdown-it-toc.min.js'></script>
+<script src='js/highlight.min.js'></script>
+<script>
+var isNeedSave = false;
+var listObj = {};
+var sampleData = `# First sample H1
+
+## First sample H2
+
+Normal text **Bold Text** ***Italic Bold Text*** ~~Strike Through text~~ *Italic Text*
+
+# Second sample H1
+
+## Second sample H2
+
+### Second sample H3
+
+> Quoted text
+>
+>> Quote within a quote
+>>
+
+\`\`\`JavaScript
+function myFun() {
+	var that = this;
+	return that;
+}
+\`\`\`
+`;
+var md = markdownit({
+  html:         false,        // 在源码中启用 HTML 标签
+  xhtmlOut:     false,        // 使用 '/' 来闭合单标签 （比如 <br />）。
+  breaks:       false,        // 转换段落里的 '\n' 到 <br>。
+  langPrefix:   'language-',  // 给围栏代码块的 CSS 语言前缀。对于额外的高亮代码非常有用。
+  linkify:      false,        // 将类似 URL 的文本自动转换为链接。
+  typographer:  false,
+  quotes: '“”‘’',
+  highlight: function (str, lang) {
+    if (lang && hljs.getLanguage(lang)) {
+      try {
+        return hljs.highlight(lang, str).value;
+      } catch (__) {}
+    }
+    return ''; // 使用额外的默认转义
+  }
+});
+md.use(markdownitTOC);
+
+function updatePreview(){
+	var d = document;
+	var source = $("#editor").val();
+	var html = "\t" + md.render('[toc]\n' + source);
+	html = html.replace(/\<a/g,"<a target='_blank'");
+	// add class "hljs" for dark theme rendering
+	html = html.replace(/\<pre/g,"<pre class='hljs'");
+	$("#preview").html(html);
+	//add scrollIntoView to anchor link
+	var aTags = d.querySelectorAll("a[href]");
+	for (let i = 0; i < aTags.length; i++) {
+		if (aTags[i].href.indexOf("#") !== -1) {
+			aTags[i].onclick = function(e) {
+				var c = e || event;
+				c.preventDefault();
+				var href = aTags[i].href;
+				var hashPos = href.indexOf("#");
+				var id = href.substring(hashPos+1, href.length);
+				d.querySelector("a[id='"+String(id)+"']").scrollIntoView({behavior: "smooth"});
+			}
+		}
+	}
+}
+function updateList() {
+	$.getJSON("/blogs",function(res){
+		listObj = {};
+		var blogs = res.blogs;
+		var tempObj = {};
+		var blog_by_year = [];
+		for (let m = 0; m < blogs.length; m++) {
+			let year = blogs[m].slug.substring(0,4);
+			if (!tempObj[year]) {
+				tempObj[year] = [];
+			}
+			tempObj[year].push(blogs[m]);
+		}
+		var key_arr = Object.keys(tempObj);
+		for (let n = 0; n < key_arr.length; n++) {
+			blog_by_year.push(tempObj[key_arr[key_arr.length - 1 - n]]);
+		}
+		var str ="";
+		for (let i = 0; i < blog_by_year.length; i++) {
+			let blog_arr = blog_by_year[i];
+			str += `<h2 style="margin-bottom: 0px;">${blog_arr[0].slug.substring(0,4)}</h2>`;
+			str += `<hr>`;
+			for (let j = 0; j < blog_arr.length; j++) {
+				str += `<p>
+					<a class="blog-list-item" target="_blank" href="/blogs?slug=${blog_arr[j].slug}">
+						${blog_arr[j].title}
+					</a><br>
+					${blog_arr[j].slug.substring(0,10)}
+				</p>`;
+				listObj[blog_arr[j].slug] = true;
+			}
+			$("#list_of_posts").html(str);
+			$(".blog-list-item").click(function(e) {
+				var c = e || event;
+				c.preventDefault();
+				var fullURL = this.href;
+				var isLoadNew = false;
+				if (isNeedSave) {
+					isLoadNew = confirm("Confirm to load new post without saving current post?");
+					if (isLoadNew) {
+						loadNewPost(fullURL);
+						isNeedSave = false;
+					}
+				} else {
+					loadNewPost(fullURL);
+				}
+					
+				function loadNewPost(url) {
+					$.getJSON(url+"&ismd=true", function(res) {
+						var blog = res;
+						$("#layout").val(blog.layout) ;
+						$("#title").val(blog.title);
+						$("#desc").val(blog.description);
+						$("#tags").val(blog.tags);
+						$("#comments").val(blog.comments);
+						$("#related_blog").val(blog.related_blog);
+						$("#editor").val(blog.content);
+						$("#slug").val(blog.slug);
+						updatePreview();
+					});
+				}
+			});
+		}
+	});
+}
+function init() {
+	$("#title").val("This is a sample Markdown");
+	$("#desc").val("This is a sample article summary");
+	$("#tags").val("JavaScript,Node,jQuery");
+	$("#related_blog").val("2019-05-05-sample-markdown-01,2020-01-31-sample-markdown-02");
+	$("#slug").val("2099-04-19-sample-markdown");
+	$("#editor").val(sampleData);
+	updatePreview();
+	updateList();
+}
+
+// actions
+$("#editor").on('input', function() {
+	isNeedSave = true;
+	updatePreview();
+});
+
+/*ctrl+enter to trigger save start*/
+$("body").on("keyup","#editor", function(e) {
+	if (e.ctrlKey && e.keyCode == 13) {
+		// Ctrl-Enter pressed
+		$("#save").click();
+	}
+});
+/*ctrl+enter to trigger save end*/
+
+$("#update_list").click(function() {
+	updateList();
+});
+$("#clear_editor").click(function() {
+	var isNeedClear = false;
+	if (isNeedSave) {
+		isNeedClear = confirm("Confirm to clear without saving?");
+	} else {
+		clearEditor();
+		isNeedSave = false;
+	}
+	if (isNeedClear) {
+		clearEditor();
+		isNeedSave = false;
+	}
+	function clearEditor() {
+		$("#title").val("");
+		$("#desc").val("");
+		$("#tags").val("");
+		$("#related_blog").val("");
+		$("#editor").val("");
+		$("#slug").val("");
+		$("#preview").html("");
+	}
+});
+$("#save").click(function() {
+	//content validation
+	var isEmpty = false;
+	var valiArr = [
+	($("#title").val() == ""),
+	($("#desc").val() == ""),
+	($("#tags").val() == ""),
+	($("#editor").val() == ""),
+	($("#slug").val() == "")
+	]
+	for (let mm = 0; mm < valiArr.length; mm++) {
+		if (valiArr[mm]) {
+			isEmpty = true;
+		}
+	}
+	if (isEmpty) {
+		alert("All fields are mandatory!");
+		return;
+	}
+	//intention validation
+	var isSave = false;
+	if (listObj[$("#slug").val()]) {
+		isSave = confirm("Confirm to update article?");
+	} else {
+		isSave = confirm("Confirm to create article?");
+	}
+	if (!isSave) {
+		return;
+	}
+	var str = "---" + "\n";
+	str += "layout: " + $("#layout").val() + "\n";
+	str += "title: " + $("#title").val() + "\n";
+	str += "description: " + $("#desc").val() + "\n";
+	str += "tags: [" + $("#tags").val() + "]\n";
+	str += "comments: " + $("#comments").val() + "\n";
+	str += "related_blog: [" + $("#related_blog").val() + "]\n";
+	str += "---" + "\n\n";
+	str += $("#editor").val();
+	var obj = {
+		str: str,
+		slug: $("#slug").val()
+	}
+	isNeedSave = false;
+	$.ajax({
+		type: 'post',
+		url: '/savepost',   // url
+		data: JSON.stringify(obj), // data to be submit
+		contentType: "application/json; charset=utf-8",
+	    dataType: "json",
+		timeout: 500,     // timeout milliseconds
+	  success: function (data,status,xhr) {   // success callback function
+	    alert("success");
+	    updateList();
+	  },
+    	error: function (jqXhr, textStatus, errorMessage) { // error callback 
+			alert("failed");
+		}
+	});
+});
+$("#delete").click(function() {
+	//content validation
+	var isEmpty = ($("#slug").val() == "");
+	if (isEmpty) {
+		alert("Please specify a post in 'slug'");
+		return;
+	}
+	//intention validation
+	var isDelete = false;
+	if (listObj[$("#slug").val()]) {
+		isDelete = confirm("Confirm to delete post?");
+	} else {
+		alert("Post not found.");
+		return;
+	}
+	if (!isDelete) {
+		return;
+	}
+	var obj = {
+		slug: $("#slug").val()
+	}
+	isNeedSave = false;
+	$.ajax({
+		type: 'post',
+		url: '/deletepost',   // url
+		data: JSON.stringify(obj), // data to be submit
+		contentType: "application/json; charset=utf-8",
+	    dataType: "json",
+		timeout: 500,     // timeout milliseconds
+	  success: function (data,status,xhr) {   // success callback function
+	    alert("success");
+	    updateList();
+	  },
+    	error: function (jqXhr, textStatus, errorMessage) { // error callback 
+			alert("failed");
+		}
+	});
+});
+$("#load_sample").click(function() {
+	init();
+});
+//Initial data loading
+init();
+</script>
+</body>
+</html>
