@@ -1,5 +1,11 @@
-# april-cms
+# april-cms 
+
+[april-cms English description](#april-cms-English-description)
+
+## april-cms English description
 A flat-file and also API-based CMS(content management system), initially designed for my Nuxt blog website project.
+
+### Start and run
 
 To start API and open interface on Chrome. If you haven't installed Chrome, please have a try, and this interface is designed to be opened on Chrome by default.
 
@@ -7,7 +13,15 @@ To start API and open interface on Chrome. If you haven't installed Chrome, plea
 npm start
 ```
 
+### Interface
+
 You can use the interface to create/modify/delete blog articles, which are stored as Markdown files in `blogs` folder.
+
+Interface Preview
+
+![preview](img/preview.png)
+
+### API
 
 And you can use it for `Nuxt` or any `JAMstack` projects.
 
