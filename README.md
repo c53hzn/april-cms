@@ -10,6 +10,18 @@ A flat-file and also API-based CMS(content management system), initially designe
 
 ### Start and run
 
+First clone this repo
+
+```
+git clone https://github.com/c53hzn/april-cms.git
+```
+
+Then install the dependencies
+
+```
+npm install
+```
+
 To start API and open interface on Chrome, run the following command. If you haven't installed Chrome, please have a try, and this interface is designed to be opened on Chrome by default.
 
 ```
@@ -47,6 +59,18 @@ Feedbacks are more than welcome~
 本项目为操作纯文本文件的基于 API 的内容管理系统，最初是为 Nuxt 博客网站项目设计的。
 
 ### 启动
+
+先把这个 repo 克隆到你的电脑上
+
+```
+git clone https://github.com/c53hzn/april-cms.git
+```
+
+然后安装依赖
+
+```
+npm install
+```
 
 要启动 API 并在 Chrome 上打开操作界面，请在命令行中使用以下的命令。如果你的电脑上没有安装 Chrome，趁此机会装一个吧。本项目的操作界面默认打开 Chrome 浏览器。
 
