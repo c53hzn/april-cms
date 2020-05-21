@@ -4,6 +4,8 @@
 
 [april-cms 中文说明](#april-cms-中文说明)
 
+[给我充电](#给我充电)
+
 ## april-cms English description
 
 A flat-file and also API-based CMS(content management system), initially designed for my Nuxt blog website project.
@@ -106,4 +108,8 @@ npm start
 
 如果你想获取 CMS 里面所有图片资源，可以用这个 API： `http://127.0.0.1:4000/blog?img=all_imgs`.
 
-欢迎讨论本项目的任何问题~
+## 给我充电
+
+我的爱发电主页 [https://afdian.net/@c53hzn](https://afdian.net/@c53hzn)
+
+欢迎讨论本项目的任何问题，有什么意见建议都欢迎提出~
