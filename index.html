@@ -182,7 +182,8 @@ function updatePreview(){
 	}
 }
 function updateList() {
-	$.getJSON("/blogs",function(res){
+	$.getJSON("/blog?iseditor=true",function(res){
+		console.log(res)
 		listObj = {};
 		var blogs = res.blogs;
 		var tempObj = {};
@@ -205,7 +206,7 @@ function updateList() {
 			str += `<hr>`;
 			for (let j = 0; j < blog_arr.length; j++) {
 				str += `<p>
-					<a class="blog-list-item" target="_blank" href="/blogs?slug=${blog_arr[j].slug}">
+					<a class="blog-list-item" target="_blank" href="/blog?slug=${blog_arr[j].slug}&iseditor=true">
 						${blog_arr[j].title}
 					</a><br>
 					${blog_arr[j].slug.substring(0,10)}

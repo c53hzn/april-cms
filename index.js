@@ -5,6 +5,7 @@ var hljs = require('highlight.js');
 var markdownIt = require('markdown-it');
 var markdownItToc = require('markdown-it-toc');
 var open = require("open");
+var config = require(__dirname+"\\config.js");
 
 var app = express();
 var md = markdownIt({
@@ -26,16 +27,43 @@ var md = markdownIt({
 });
 md.use(markdownItToc);
 
+var realSlug = function(slug,isSlugUseDate) {
+	var result = "";
+	if (isSlugUseDate) {
+		result = slug+".md";
+	} else {
+		var files = fs.readdirSync(config.blogPath);
+		var slugs = files.map(function(e) {
+			return e.substring(11,e.length);
+		});	
+		for (let i = 0; i < slugs.length; i++) {
+			if (slugs[i]==slug+".md") {
+				result = files[i];
+				break;
+			}
+		}
+	}
+	return result;
+}
+var linkSlug = function(filename,isSlugUseDate) {
+	if (isSlugUseDate) {
+		return filename.substring(0,filename.length-3);
+	} else {
+		return filename.substring(11,filename.length-3);
+	}
+}
+
 var singleBlog = function(fullPath,slug,isContentRequired,isMD,isDev) {
 	var blog = {};
 	var content = fm(fs.readFileSync(fullPath, "utf8"));
 	blog = content.attributes;
 	blog.slug = slug;
+	blog.date = fullPath.replace(config.blogPath+"\\","").replace("-"+slug,"").replace(".md","");
 	if (isContentRequired && !isMD) {
 		let html = md.render('@[toc]( )\n' + content.body);
 		// add class "hljs" for dark theme rendering
 		if (isDev) {
-			html = html.replace(/src=\"?(\/)img/g,"src=\"http://127.0.0.1:4000/img");
+			html = html.replace(/src=\"(\/)?img/g,"src=\"http://127.0.0.1:4000/img");
 		}
 		blog.content = html.replace(/\<pre/g,"<pre class='hljs'");
 	} else if (isContentRequired && isMD) {
@@ -45,12 +73,12 @@ var singleBlog = function(fullPath,slug,isContentRequired,isMD,isDev) {
 }
 
 //return blog related contents
-app.get("/blogs", function(req, res) {
+app.get("/blog", function(req, res) {
 	// allow cross orign access
 	res.header('Access-Control-Allow-Origin', '*');
 	
-	var blogPath = __dirname + '\\blogs';
-	var imgPath = __dirname + '\\img\\blogs';
+	var blogPath = config.blogPath;
+	var imgPath = config.imgPath;
 	var files = fs.readdirSync(blogPath);
 
 	var json = {};// result to be returned
@@ -58,19 +86,21 @@ app.get("/blogs", function(req, res) {
 	var qSlug = req.query.slug || "";
 	var qTag = req.query.tag || "";
 	var qImg = req.query.img || "";
-	var qIsMD = (req.query.ismd == "true") || false;
-	var qIsDev = (req.query.isdev == "true") || false;
+	var qIsMD = req.query.ismd == "true";
+	var qIsDev = req.query.isdev == "true";
+	var isSlugUseDate = (req.query.iseditor == "true")?true:config.isSlugUseDate;
+
 	if (qSlug) {// with blog slug query
-		json = singleBlog(`${blogPath}\\${qSlug}.md`,qSlug,true,qIsMD,qIsDev);
+		json = singleBlog(`${blogPath}\\${realSlug(qSlug,isSlugUseDate)}`,qSlug,true,qIsMD,qIsDev);
 		for (let k = 0; k < files.length; k++) {// add prev and next blog
-			if (qSlug == files[k].replace(/\.md$/, "")) {
+			if (qSlug == linkSlug(files[k])) {
 				if (k === 0) {
-					json.next = files[k+1].replace(/\.md$/,"");
+					json.next = linkSlug(files[k+1]);
 				} else if (k === files.length-1) {
-					json.prev = files[k-1].replace(/\.md$/,"");
+					json.prev = linkSlug(files[k-1]);
 				} else {
-					json.prev = files[k-1].replace(/\.md$/,"");
-					json.next = files[k+1].replace(/\.md$/,"");
+					json.prev = linkSlug(files[k-1]);
+					json.next = linkSlug(files[k+1]);
 				}
 			}
 		}
@@ -78,7 +108,7 @@ app.get("/blogs", function(req, res) {
 		if (qTag == "all_tags") {// returns list of all available tags
 			json.tags = {};
 			for (let i = 0; i < files.length; i++) {
-				let blogPost = singleBlog(blogPath+"\\"+files[i],files[i].replace(/\.md$/, ""));
+				let blogPost = singleBlog(blogPath+"\\"+files[i],linkSlug(files[i]));
 				let tags = blogPost.tags || ['none'];
 				let entry = {
 					title: blogPost.title,
@@ -95,7 +125,7 @@ app.get("/blogs", function(req, res) {
 		} else {// returns blog list of specific tag
 			json.blogs = [];
 			for (let i = 0; i < files.length; i++) {
-				let blogPost = singleBlog(blogPath+"\\"+files[i], files[i].replace(".md", ""));
+				let blogPost = singleBlog(blogPath+"\\"+files[i],linkSlug(files[i]));
 				let tags = blogPost.tags || ['none'];
 				let entry = {
 					title: blogPost.title,
@@ -120,7 +150,7 @@ app.get("/blogs", function(req, res) {
 	} else {//without requirement, returns list of all blogs
 		json.blogs = [];
 		for (let i = 0; i < files.length; i++) {
-			let blogPost = singleBlog(blogPath+"\\"+files[i], files[i].replace(".md", ""));
+			let blogPost = singleBlog(blogPath+"\\"+files[i],linkSlug(files[i],isSlugUseDate));
 			json.blogs.unshift(blogPost);
 		}
 	}
@@ -143,7 +173,7 @@ app.use(express.json());
 // Access the parse results as request.body
 app.post('/savepost', function(req, res){
 	var obj = req.body;
-	var fileName = __dirname+"\\blogs\\"+obj.slug+".md";
+	var fileName = config.blogPath+"\\"+obj.slug+".md";
     fs.writeFileSync(fileName, obj.str);
     //Client will get status of failure w/o this
     //even if data is saved to server successfully
@@ -152,7 +182,7 @@ app.post('/savepost', function(req, res){
 // delete post
 app.post('/deletepost', function(req, res){
 	var obj = req.body;
-	var fileName = __dirname+"\\blogs\\"+obj.slug+".md";
+	var fileName = config.blogPath+"\\"+obj.slug+".md";
 	try {
 		fs.unlinkSync(fileName);
 		//file removed

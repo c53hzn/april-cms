@@ -30,7 +30,7 @@ npm start
 
 ### Interface
 
-You can use the interface to create/modify/delete blog articles, which are stored as Markdown files in `blogs` folder.
+You can use the interface to create/modify/delete blog articles, which are stored as Markdown files in `blog` folder.
 
 Interface Preview
 
@@ -40,17 +40,19 @@ Interface Preview
 
 And you can use it for `Nuxt` or any `JAMstack` projects.
 
-For blog list, just call `http://127.0.0.1:4000/blogs`
+For blog list, just call `http://127.0.0.1:4000/blog`
 
-For specific blog article content, if under dev mode, call `http://127.0.0.1:4000/blogs?slug=yourslug&isdev=true`
+For specific blog article content, if under dev mode, call `http://127.0.0.1:4000/blog?slug=yourslug&isdev=true`
 
-If it is static/server mode, call `http://127.0.0.1:4000/blogs?slug=yourslug`
+If it is static/server mode, call `http://127.0.0.1:4000/blog?slug=yourslug`
 
-For tag list, call `http://127.0.0.1:4000/blogs?tag=all_tags`
+To switch between short slug mode and long slug with date mode, change `config.js`.
 
-For blog article list of specific tag, call `http://127.0.0.1:4000/blogs?tag=yourtag`
+For tag list, call `http://127.0.0.1:4000/blog?tag=all_tags`
 
-And if you want to scrape the image assets, you can call `http://127.0.0.1:4000/blogs?img=all_imgs`.
+For blog article list of specific tag, call `http://127.0.0.1:4000/blog?tag=yourtag`
+
+And if you want to scrape the image assets, you can call `http://127.0.0.1:4000/blog?img=all_imgs`.
 
 Feedbacks are more than welcome~
 
@@ -80,7 +82,7 @@ npm start
 
 ### 操作界面
 
-你可以使用操作界面来创建/修改/删除博客文章，相关文章将会以 Markdown 文件格式保存在 `blogs` 文件夹里面.
+你可以使用操作界面来创建/修改/删除博客文章，相关文章将会以 Markdown 文件格式保存在 `blog` 文件夹里面.
 
 操作界面预览
 
@@ -90,16 +92,18 @@ npm start
 
 如果你有一些 `Nuxt` 或任何 `JAMstack` 的项目，都可以用这个 CMS 的 API.
 
-要获取所有文章列表，可以使用此 API： `http://127.0.0.1:4000/blogs`
+要获取所有文章列表，可以使用此 API： `http://127.0.0.1:4000/blog`
 
-要获取特定文章的内容，如果在开发模式下，可以使用此 API： `http://127.0.0.1:4000/blogs?slug=yourslug&isdev=true`
+要获取特定文章的内容，如果在开发模式下，可以使用此 API： `http://127.0.0.1:4000/blog?slug=yourslug&isdev=true`
 
-如果是在生成静态文件时或者是服务器上使用，可以用这个 API： `http://127.0.0.1:4000/blogs?slug=yourslug`
+如果是在生成静态文件时或者是服务器上使用，可以用这个 API： `http://127.0.0.1:4000/blog?slug=yourslug`
 
-要获取标签列表，可以使用此 API： `http://127.0.0.1:4000/blogs?tag=all_tags`
+如果想在带日期的长 `slug` 和不带日期的短 `slug` 中间切换，可以在 `config.js` 里面设置。
 
-要获取某标签下的文章列表，可以使用此 API： `http://127.0.0.1:4000/blogs?tag=yourtag`
+要获取标签列表，可以使用此 API： `http://127.0.0.1:4000/blog?tag=all_tags`
 
-如果你想获取 CMS 里面所有图片资源，可以用这个 API： `http://127.0.0.1:4000/blogs?img=all_imgs`.
+要获取某标签下的文章列表，可以使用此 API： `http://127.0.0.1:4000/blog?tag=yourtag`
+
+如果你想获取 CMS 里面所有图片资源，可以用这个 API： `http://127.0.0.1:4000/blog?img=all_imgs`.
 
 欢迎讨论本项目的任何问题~
