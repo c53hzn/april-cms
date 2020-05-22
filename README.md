@@ -42,6 +42,8 @@ Interface Preview
 
 For `related_blog`, you can use dropdown menu to select related blog slugs.
 
+![dropdown](img/related_blog-dropdown.png)
+
 ### API
 
 And you can use it for `Nuxt` or any `JAMstack` projects.
@@ -99,6 +101,8 @@ npm start
 ![preview](img/preview.png)
 
 要输入 `related_blog` 时，可以使用下拉菜单选择关联的博客文章的 slug。
+
+![dropdown](img/related_blog-dropdown.png)
 
 ### API
 
