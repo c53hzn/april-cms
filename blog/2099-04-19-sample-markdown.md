@@ -4,7 +4,7 @@ title: This is a sample Markdown
 description: This is a sample article summary
 tags: [JavaScript,Node,jQuery]
 comments: true
-related_blog: [2019-05-05-sample-markdown-01,2020-01-31-sample-markdown-02]
+related_blog: [2020-01-31-sample-markdown-03,2019-05-05-sample-markdown-01]
 ---
 
 # First sample H1

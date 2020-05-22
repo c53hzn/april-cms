@@ -156,6 +156,12 @@ app.get("/blog", function(req, res) {
 	}
 	res.send(json);
 });
+app.get("/config", function(req, res) {
+	// allow cross orign access
+	res.header('Access-Control-Allow-Origin', '*');
+	res.send(config);
+});
+
 
 //return blog content editor page
 app.use(express.static(__dirname));

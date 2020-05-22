@@ -26,15 +26,18 @@ nav {
 	overflow: auto;
 	box-sizing: border-box;
 }
-.placeholder-20 {
-	width: 20%;
-	float: left;
-}
 main {
 	margin: 0px;
 	width: 80%;
 	background: #ff9a9a;
 	overflow: hidden;
+}
+.placeholder-20 {
+	width: 20%;
+	float: left;
+}
+.bold {
+	font-weight: bold;
 }
 #post-attr {
 	padding: 0px 20px;
@@ -97,6 +100,7 @@ main {
 			<br>
 			<span>related_blog(split with ",")</span><br>
 			<input id="related_blog" style="width: 100%;" type="text">
+			<div id="related_blog_select" style="position:absolute;transform: translateY(-18px);max-height:300px;padding:0px;background:white;display:none;overflow:hidden;box-shadow:1px 1px 1px 1px silver;"><ul style="transform: translateX(22px);margin:0px;max-height:300px;padding:0px;list-style:none;cursor:default;overflow-y:scroll;"></ul></div>
 		</p>
 	</div>
 	<div id="work-area">
@@ -183,7 +187,6 @@ function updatePreview(){
 }
 function updateList() {
 	$.getJSON("/blog?iseditor=true",function(res){
-		console.log(res)
 		listObj = {};
 		var blogs = res.blogs;
 		var tempObj = {};
@@ -206,52 +209,93 @@ function updateList() {
 			str += `<hr>`;
 			for (let j = 0; j < blog_arr.length; j++) {
 				str += `<p>
-					<a class="blog-list-item" target="_blank" href="/blog?slug=${blog_arr[j].slug}&iseditor=true">
+					<a class="blog-list-item" target="_blank"
+					href="/blog?slug=${blog_arr[j].slug}&iseditor=true">
 						${blog_arr[j].title}
 					</a><br>
 					${blog_arr[j].slug.substring(0,10)}
 				</p>`;
 				listObj[blog_arr[j].slug] = true;
+				
 			}
-			$("#list_of_posts").html(str);
-			$(".blog-list-item").click(function(e) {
-				var c = e || event;
-				c.preventDefault();
-				var fullURL = this.href;
-				var isLoadNew = false;
-				if (isNeedSave) {
-					isLoadNew = confirm("Confirm to load new post without saving current post?");
-					if (isLoadNew) {
-						loadNewPost(fullURL);
-						isNeedSave = false;
-					}
-				} else {
-					loadNewPost(fullURL);
-				}
-					
-				function loadNewPost(url) {
-					$.getJSON(url+"&ismd=true", function(res) {
-						var blog = res;
-						$("#layout").val(blog.layout) ;
-						$("#title").val(blog.title);
-						$("#desc").val(blog.description);
-						$("#tags").val(blog.tags);
-						$("#comments").val(blog.comments);
-						$("#related_blog").val(blog.related_blog);
-						$("#editor").val(blog.content);
-						$("#slug").val(blog.slug);
-						updatePreview();
-					});
-				}
-			});
 		}
+		setRelatedList();
+		$("#list_of_posts").html(str);
+		$(".blog-list-item").click(function(e) {
+			var c = e || event;
+			c.preventDefault();
+			var fullURL = this.href;
+			var isLoadNew = false;
+			if (isNeedSave) {
+				isLoadNew = confirm("Confirm to load new post without saving current post?");
+				if (isLoadNew) {
+					loadNewPost(fullURL);
+					isNeedSave = false;
+				}
+			} else {
+				loadNewPost(fullURL);
+			}
+		});
+	});
+	function loadNewPost(url) {
+		$.getJSON(url+"&ismd=true", function(res) {
+			var blog = res;
+			$("#layout").val(blog.layout) ;
+			$("#title").val(blog.title);
+			$("#desc").val(blog.description);
+			$("#tags").val(blog.tags);
+			$("#comments").val(blog.comments);
+			$("#related_blog").val(blog.related_blog);
+			$("#editor").val(blog.content);
+			$("#slug").val(blog.slug);
+			updatePreview();
+			setRelatedList();
+		});
+	}
+}
+function setRelatedList() {
+	$("#related_blog_select ul").html("");
+	function getCurrRelated() {
+		var related_blog = $("#related_blog").val().split(",");
+		var obj = {};
+		for (let i = 0; i < related_blog.length; i++) {
+			obj[related_blog[i]] = true;
+		}
+		return obj;
+	}
+	var curr_related_obj = getCurrRelated();
+	var curr_list = Object.keys(listObj);
+	for (let t = 0; t < curr_list.length; t++) {
+		var str_class = ""
+		if (curr_related_obj[curr_list[t]]) {
+			str_class = ` class="bold"`;
+		}
+		$("#related_blog_select ul").append(`<li style="margin: 2px 26px 2px 
+		0px;height: 20px;border:1px solid white"${str_class}>
+		${curr_list[t]}
+		</li>`);
+	}
+	$("#related_blog_select li").mouseover(function(){
+		$(this).css("border","1px solid gray");
+	});
+	$("#related_blog_select li").mouseleave(function(){
+		$(this).css("border","1px solid white");
+	});
+	$("#related_blog_select li").click(function(){
+		$(this).toggleClass("bold");
+		var arr = [];
+		$("#related_blog_select li.bold").each(function(){
+			var that = this;
+			arr.push($(that).text().replace(/\t/g,""));
+		});
+		$("#related_blog").val(arr.join(","));
 	});
 }
 function init() {
 	$("#title").val("This is a sample Markdown");
 	$("#desc").val("This is a sample article summary");
 	$("#tags").val("JavaScript,Node,jQuery");
-	$("#related_blog").val("2019-05-05-sample-markdown-01,2020-01-31-sample-markdown-02");
+	$("#related_blog").val("2020-01-31-sample-markdown-03,2019-05-05-sample-markdown-01");
 	$("#slug").val("2099-04-19-sample-markdown");
 	$("#editor").val(sampleData);
 	updatePreview();
@@ -259,6 +303,29 @@ function init() {
 }
 
 // actions
+$("#related_blog").on("focus",function() {
+	$("#related_blog_select").slideDown();
+});
+
+var isMouseOnList = false;
+$("#related_blog").on("mouseover",function() {
+	isMouseOnList = true;
+});
+$("#related_blog").on("mouseleave",function() {
+	isMouseOnList = false;
+});
+$("#related_blog_select").mouseover(function(){
+	isMouseOnList = true;
+});
+$("#related_blog_select").mouseleave(function(){
+	isMouseOnList = false;
+});
+
+$("body").click(function() {
+	if (!isMouseOnList) {
+		$("#related_blog_select").slideUp();
+	}
+});
 $("#editor").on('input', function() {
 	isNeedSave = true;
 	updatePreview();

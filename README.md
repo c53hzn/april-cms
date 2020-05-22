@@ -34,9 +34,13 @@ npm start
 
 You can use the interface to create/modify/delete blog articles, which are stored as Markdown files in `blog` folder.
 
+**Please note that you must use full slug with date in `related_blog` rather than short slug.**
+
 Interface Preview
 
 ![preview](img/preview.png)
+
+For `related_blog`, you can use dropdown menu to select related blog slugs.
 
 ### API
 
@@ -49,6 +53,8 @@ For specific blog article content, if under dev mode, call `http://127.0.0.1:400
 If it is static/server mode, call `http://127.0.0.1:4000/blog?slug=yourslug`
 
 To switch between short slug mode and long slug with date mode, change `config.js`.
+
+**In order to handle `related_blog`, you must call `http://127.0.0.1:4000/config` first and confirm if `config.isSlugUseDate == true` then can you decide how to call and handle `related_blog`.**
 
 For tag list, call `http://127.0.0.1:4000/blog?tag=all_tags`
 
@@ -86,9 +92,13 @@ npm start
 
 你可以使用操作界面来创建/修改/删除博客文章，相关文章将会以 Markdown 文件格式保存在 `blog` 文件夹里面.
 
+**请注意，在`related_blog`里面必须使用带日期的长slug。**
+
 操作界面预览
 
 ![preview](img/preview.png)
+
+要输入 `related_blog` 时，可以使用下拉菜单选择关联的博客文章的 slug。
 
 ### API
 
@@ -101,6 +111,8 @@ npm start
 如果是在生成静态文件时或者是服务器上使用，可以用这个 API： `http://127.0.0.1:4000/blog?slug=yourslug`
 
 如果想在带日期的长 `slug` 和不带日期的短 `slug` 中间切换，可以在 `config.js` 里面设置。
+
+**为方便处理 `related_blog`，你必须先调用 `http://127.0.0.1:4000/config` 并确定是否有 `config.isSlugUseDate == true`，然后才可以决定如何调用并处理 `related_blog`。**
 
 要获取标签列表，可以使用此 API： `http://127.0.0.1:4000/blog?tag=all_tags`
 
