@@ -38,7 +38,7 @@ var str = "asdf";
 
 Scelerisque purus semper eget duis at tellus at urna. Turpis egestas sed tempus urna et pharetra. Tempus egestas sed sed risus pretium quam vulputate. Dictumst quisque sagittis purus sit amet volutpat consequat. Nulla aliquet porttitor lacus luctus accumsan tortor. Eu tincidunt tortor aliquam nulla. Fringilla urna porttitor rhoncus dolor purus non enim praesent. 
 
-![starry night](/img/blogs/2019-08-05/starry-night.jpg)
+![starry night](/img/blog/2019-08-05/starry-night.jpg)
 
 A erat nam at lectus. Gravida quis blandit turpis cursus in. Vitae turpis massa sed elementum. Ac odio tempor orci dapibus ultrices in. Cras tincidunt lobortis feugiat vivamus. Metus aliquam eleifend mi in nulla posuere sollicitudin. Est ullamcorper eget nulla facilisi etiam dignissim diam quis. 
 
