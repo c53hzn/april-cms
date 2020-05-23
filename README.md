@@ -1,5 +1,7 @@
 # april-cms 
 
+Github repo: [https://github.com/c53hzn/april-cms](https://github.com/c53hzn/april-cms)
+
 [april-cms English description](#april-cms-English-description)
 
 [april-cms 中文说明](#april-cms-中文说明)
@@ -127,5 +129,9 @@ npm start
 ## 给我充电
 
 我的爱发电主页 [https://afdian.net/@c53hzn](https://afdian.net/@c53hzn)
+
+请我喝一杯肥宅水，写起代码再不累~
+
+请我喝一杯咖啡，从此我们一起飞~
 
 欢迎讨论本项目的任何问题，有什么意见建议都欢迎提出~
