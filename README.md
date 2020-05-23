@@ -130,7 +130,7 @@ npm start
 
 我的爱发电主页 [https://afdian.net/@c53hzn](https://afdian.net/@c53hzn)
 
-请我喝一杯肥宅水，写起代码再不累~
+请我喝杯肥宅水，写起代码再不累~
 
 请我喝一杯咖啡，从此我们一起飞~
 
