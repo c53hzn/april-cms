@@ -2,9 +2,9 @@
   "name": "april-cms",
   "version": "1.0.0",
   "description": "A flat-file and also API-based CMS(content management system).",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node app.js"
   },
   "keywords": [
     "CMS","flat-file","API-based","content management system"

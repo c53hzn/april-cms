@@ -168,7 +168,7 @@ app.use(express.static(__dirname));
 app.get("/", function(req, res) {
   	// allow cross orign access
 	res.header('Access-Control-Allow-Origin', '*');
-	res.sendFile(__dirname+"\\index.html");
+	res.sendFile(__dirname+"\\app.html");
 });
 
 //api to submit post

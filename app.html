@@ -98,7 +98,7 @@ main {
 			<span>description</span><br>
 			<textarea id="desc" style="width: 100%;"></textarea>
 			<br>
-			<span>related_blog(split with ",")</span><br>
+			<span>related_blog</span><br>
 			<input id="related_blog" style="width: 100%;" type="text">
 			<div id="related_blog_select" style="position:absolute;transform: translateY(-18px);max-height:300px;padding:0px;background:white;display:none;overflow:hidden;box-shadow:1px 1px 1px 1px silver;"><ul style="transform: translateX(22px);margin:0px;max-height:300px;padding:0px;list-style:none;cursor:default;overflow-y:scroll;"></ul></div>
 		</p>
@@ -271,7 +271,7 @@ function setRelatedList() {
 			str_class = ` class="bold"`;
 		}
 		$("#related_blog_select ul").append(`<li style="margin: 2px 26px 2px 
-		0px;height: 20px;border:1px solid white"${str_class}>
+		0px;height: 20px;border:1px solid white;"${str_class}>
 		${curr_list[t]}
 		</li>`);
 	}
@@ -282,6 +282,7 @@ function setRelatedList() {
 		$(this).css("border","1px solid white");
 	});
 	$("#related_blog_select li").click(function(){
+		isNeedSave = true;
 		$(this).toggleClass("bold");
 		var arr = [];
 		$("#related_blog_select li.bold").each(function(){
