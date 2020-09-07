@@ -27,7 +27,7 @@ var md = markdownIt({
 });
 md.use(markdownItToc);
 
-var realSlug = function(slug,isSlugUseDate) {
+var slugToFileName = function(slug,isSlugUseDate) {
 	var result = "";
 	if (isSlugUseDate) {
 		result = slug+".md";
@@ -45,7 +45,7 @@ var realSlug = function(slug,isSlugUseDate) {
 	}
 	return result;
 }
-var linkSlug = function(filename,isSlugUseDate) {
+var fileNameToSlug = function(filename,isSlugUseDate) {
 	if (isSlugUseDate) {
 		return filename.substring(0,filename.length-3);
 	} else {
@@ -91,16 +91,16 @@ app.get("/blog", function(req, res) {
 	var isSlugUseDate = (req.query.iseditor == "true")?true:config.isSlugUseDate;
 
 	if (qSlug) {// with blog slug query
-		json = singleBlog(`${blogPath}\\${realSlug(qSlug,isSlugUseDate)}`,qSlug,true,qIsMD,qIsDev);
+		json = singleBlog(`${blogPath}\\${slugToFileName(qSlug,isSlugUseDate)}`,qSlug,true,qIsMD,qIsDev);
 		for (let k = 0; k < files.length; k++) {// add prev and next blog
-			if (qSlug == linkSlug(files[k])) {
+			if (qSlug == fileNameToSlug(files[k])) {
 				if (k === 0) {
-					json.next = linkSlug(files[k+1]);
+					json.next = fileNameToSlug(files[k+1]);
 				} else if (k === files.length-1) {
-					json.prev = linkSlug(files[k-1]);
+					json.prev = fileNameToSlug(files[k-1]);
 				} else {
-					json.prev = linkSlug(files[k-1]);
-					json.next = linkSlug(files[k+1]);
+					json.prev = fileNameToSlug(files[k-1]);
+					json.next = fileNameToSlug(files[k+1]);
 				}
 			}
 		}
@@ -108,7 +108,7 @@ app.get("/blog", function(req, res) {
 		if (qTag == "all_tags") {// returns list of all available tags
 			json.tags = {};
 			for (let i = 0; i < files.length; i++) {
-				let blogPost = singleBlog(blogPath+"\\"+files[i],linkSlug(files[i]));
+				let blogPost = singleBlog(blogPath+"\\"+files[i],fileNameToSlug(files[i]));
 				let tags = blogPost.tags || ['none'];
 				let entry = {
 					title: blogPost.title,
@@ -125,7 +125,7 @@ app.get("/blog", function(req, res) {
 		} else {// returns blog list of specific tag
 			json.blogs = [];
 			for (let i = 0; i < files.length; i++) {
-				let blogPost = singleBlog(blogPath+"\\"+files[i],linkSlug(files[i]));
+				let blogPost = singleBlog(blogPath+"\\"+files[i],fileNameToSlug(files[i]));
 				let tags = blogPost.tags || ['none'];
 				let entry = {
 					title: blogPost.title,
@@ -150,7 +150,7 @@ app.get("/blog", function(req, res) {
 	} else {//without requirement, returns list of all blogs
 		json.blogs = [];
 		for (let i = 0; i < files.length; i++) {
-			let blogPost = singleBlog(blogPath+"\\"+files[i],linkSlug(files[i],isSlugUseDate));
+			let blogPost = singleBlog(blogPath+"\\"+files[i],fileNameToSlug(files[i],isSlugUseDate));
 			json.blogs.unshift(blogPost);
 		}
 	}

@@ -5,7 +5,7 @@
 <meta name="apple-mobile-web-app-title" content="CodePen">
 <link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico" />
 <link rel="stylesheet" href="css/github-markdown.min.css">
-<link rel="stylesheet" href="css/hljs.dark.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.1/styles/a11y-dark.min.css">
 <title>Markdown editor for API</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
@@ -82,7 +82,7 @@ main {
 <div class="placeholder-20">&nbsp;</div>
 <main>
 	<div id="post-attr">
-		<p>
+		<p style="position: relative;">
 			<input id="clear_editor" type="button" value="Clear Editor"/>&nbsp;
 			<span>slug</span>
 			<input id="slug" type="text">
@@ -112,10 +112,10 @@ main {
 		<input type="button" value="Delete post" id="delete">
 	</div>
 </main>
-<script src='js/jquery.min.js'></script>
-<script src='js/markdown-it.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/markdown-it/10.0.0/markdown-it.min.js'></script>
 <script src='js/markdown-it-toc.min.js'></script>
-<script src='js/highlight.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.1/highlight.min.js'></script>
 <script>
 var isNeedSave = false;
 var listObj = {};
@@ -296,7 +296,7 @@ function init() {
 	$("#title").val("This is a sample Markdown");
 	$("#desc").val("This is a sample article summary");
 	$("#tags").val("JavaScript,Node,jQuery");
-	$("#related_blog").val("2020-01-31-sample-markdown-03,2019-05-05-sample-markdown-01");
+	$("#related_blog").val("2019-05-05-nuxt-blog-static-website,2020-01-31-summary-of-my-life-in-2019");
 	$("#slug").val("2099-04-19-sample-markdown");
 	$("#editor").val(sampleData);
 	updatePreview();
@@ -321,12 +321,12 @@ $("#related_blog_select").mouseover(function(){
 $("#related_blog_select").mouseleave(function(){
 	isMouseOnList = false;
 });
-
 $("body").click(function() {
 	if (!isMouseOnList) {
 		$("#related_blog_select").slideUp();
 	}
 });
+
 $("#editor").on('input', function() {
 	isNeedSave = true;
 	updatePreview();
@@ -361,6 +361,7 @@ $("#clear_editor").click(function() {
 		$("#desc").val("");
 		$("#tags").val("");
 		$("#related_blog").val("");
+		$("#related_blog_select ul").children().removeClass("bold");
 		$("#editor").val("");
 		$("#slug").val("");
 		$("#preview").html("");
