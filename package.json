@@ -7,12 +7,15 @@
     "start": "node app.js"
   },
   "keywords": [
-    "CMS","flat-file","API-based","content management system"
+    "CMS",
+    "flat-file",
+    "API-based",
+    "content management system"
   ],
   "homepage": "https://github.com/c53hzn/april-cms",
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/c53hzn/april-cms.git"
+    "type": "git",
+    "url": "https://github.com/c53hzn/april-cms.git"
   },
   "author": "c53hzn",
   "license": "MIT",
