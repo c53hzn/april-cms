@@ -81,26 +81,30 @@ main {
 </nav>
 <div class="placeholder-20">&nbsp;</div>
 <main>
+	<!-- post-attr elements must be wrapped with comment tag 
+		or they will look ugly on Edge-->
 	<div id="post-attr">
-		<p style="position: relative;">
-			<input id="clear_editor" type="button" value="Clear Editor"/>&nbsp;
-			<span>slug</span>
-			<input id="slug" type="text">
-			<span>layout</span>
-			<input id="layout" type="text" style="width: 40px;" disabled value="post">
-			<span>comments</span>
-			<input id="comments" type="text" style="width: 30px;" disabled value="true">
-			<span>title</span>
-			<input id="title" type="text">
-			<span>tags(split with ",")</span>
-			<input id="tags" type="text">
-			<br>
-			<span>description</span><br>
-			<textarea id="desc" style="width: 100%;"></textarea>
-			<br>
-			<span>related_blog</span><br>
-			<input id="related_blog" style="width: 100%;" type="text" readonly>
-			<div id="related_blog_select" style="position:absolute;transform: translateY(-18px);max-height:300px;padding:0px;background:white;display:none;overflow:hidden;box-shadow:1px 1px 1px 1px silver;"><ul style="transform: translateX(22px);margin:0px;max-height:300px;padding:0px;list-style:none;cursor:default;overflow-y:scroll;"></ul></div>
+		<p style="position: relative;"><!--
+		--><input id="clear_editor" type="button" value="Clear Editor"/>&nbsp;<!--
+		--><span>slug</span><!--
+		--><input id="slug" type="text"><!--
+		--><span>layout</span><!--
+		--><input id="layout" type="text" style="width: 40px;" disabled value="post"><!--
+		--><span>comments</span><!--
+		--><input id="comments" type="text" style="width: 30px;" disabled value="true"><!--
+		--><span>title</span><!--
+		--><input id="title" type="text"><!--
+		--><span>tags(split with ",")</span><!--
+		--><input id="tags" type="text"><!--
+		--><br><!--
+		--><span>description</span><br><!--
+		--><textarea id="desc" style="width: 100%;"></textarea><!--
+		--><br><!--
+		--><span>related_blog</span><br><!--
+		--><input id="related_blog" style="width: 100%;" type="text" readonly><!--
+		--><div id="related_blog_select" style="position:absolute;transform: translateY(-18px);max-height:300px;padding:0px;background:white;display:none;overflow:hidden;box-shadow:1px 1px 1px 1px silver;"><!--
+		--><ul style="transform: translateX(22px);margin:0px;max-height:300px;padding:0px;list-style:none;cursor:default;overflow-y:scroll;"></ul><!--
+		--></div>
 		</p>
 	</div>
 	<div id="work-area">
@@ -332,14 +336,17 @@ $("#editor").on('input', function() {
 	updatePreview();
 });
 
-/*ctrl+enter to trigger save start*/
-$("body").on("keyup","#editor", function(e) {
-	if (e.ctrlKey && e.keyCode == 13) {
-		// Ctrl-Enter pressed
-		$("#save").click();
-	}
+/*ctrl+S to trigger save start*/
+/* keyup event is not working, must use keydown*/
+$("body").on("keydown","textarea, input[type=text]", function(e) {
+	if(e.ctrlKey && e.which === 83){
+		// Check for the Ctrl key being pressed, and if the key = [S] (83)
+        e.preventDefault();
+        $("#save").click();
+        return false;
+    }
 });
-/*ctrl+enter to trigger save end*/
+/*ctrl+S to trigger save end*/
 
 $("#update_list").click(function() {
 	updateList();
