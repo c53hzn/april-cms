@@ -40,7 +40,7 @@ main {
 	font-weight: bold;
 }
 #post-attr {
-	padding: 0px 20px;
+	padding: 5px 0px 0px 5px;
 }
 #work-area {
 	margin: 0px auto;
@@ -83,29 +83,31 @@ main {
 <main>
 	<!-- post-attr elements must be wrapped with comment tag 
 		or they will look ugly on Edge-->
-	<div id="post-attr">
-		<p style="position: relative;"><!--
+	<div id="post-attr"><!--
+	--><p style="position: relative;margin: 0px; padding: 0px;"><!--
 		--><input id="clear_editor" type="button" value="Clear Editor"/>&nbsp;<!--
 		--><span>slug</span><!--
-		--><input id="slug" type="text"><!--
+		--><input id="slug" type="text">&nbsp;<!--
 		--><span>layout</span><!--
-		--><input id="layout" type="text" style="width: 40px;" disabled value="post"><!--
+		--><input id="layout" type="text" style="width: 40px;" disabled value="post">&nbsp;<!--
 		--><span>comments</span><!--
-		--><input id="comments" type="text" style="width: 30px;" disabled value="true"><!--
+		--><input id="comments" type="text" style="width: 30px;" disabled value="true">&nbsp;<!--
 		--><span>title</span><!--
-		--><input id="title" type="text"><!--
+		--><input id="title" type="text">&nbsp;<!--
 		--><span>tags(split with ",")</span><!--
-		--><input id="tags" type="text"><!--
+		--><input id="tags" type="text">&nbsp;<!--
+	--></p><!--
+		--><span>description</span><!--
 		--><br><!--
-		--><span>description</span><br><!--
-		--><textarea id="desc" style="width: 100%;"></textarea><!--
+		--><p style="margin: 0px; padding: 0px;"><textarea id="desc" style="width: 99%;"></textarea></p><!--
+	--><p style="margin: 0px 0px 5px 0px; padding: 0px;"><!--
+		--><span>related_blog</span><span style="float:right;">img path tip: ![alt](/img/blog/2099-04-19/001.jpg)</span><!--
 		--><br><!--
-		--><span>related_blog</span><br><!--
-		--><input id="related_blog" style="width: 100%;" type="text" readonly><!--
-		--><div id="related_blog_select" style="position:absolute;transform: translateY(-18px);max-height:300px;padding:0px;background:white;display:none;overflow:hidden;box-shadow:1px 1px 1px 1px silver;"><!--
+		--><input id="related_blog" style="width: 99%;" type="text" readonly><!--
+	--></p><!--
+	--><div id="related_blog_select" style="position:absolute;transform: translateY(-18px);max-height:300px;padding:0px;background:white;display:none;overflow:hidden;box-shadow:1px 1px 1px 1px silver;"><!--
 		--><ul style="transform: translateX(22px);margin:0px;max-height:300px;padding:0px;list-style:none;cursor:default;overflow-y:scroll;"></ul><!--
-		--></div>
-		</p>
+	--></div>
 	</div>
 	<div id="work-area">
 		<textarea id="editor" spellcheck="true"></textarea>
