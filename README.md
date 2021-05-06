@@ -14,10 +14,10 @@ A flat-file and also API-based CMS(content management system), initially designe
 
 ### Start and run
 
-First clone this repo
+First fork this repo and download it to your computer.
 
 ```
-git clone https://github.com/c53hzn/april-cms.git
+git clone https://github.com/<your github id>/april-cms.git
 ```
 
 Then install the dependencies
@@ -74,10 +74,10 @@ Feedbacks are more than welcome~
 
 ### 启动
 
-先把这个 repo 克隆到你的电脑上
+先把 fork 这个 repo 并下载到你的电脑上
 
 ```
-git clone https://github.com/c53hzn/april-cms.git
+git clone https://github.com/<your github id>/april-cms.git
 ```
 
 然后安装依赖
